@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lls.seckill.dao.mapper.">
+
+    <resultMap id="baseMap" type="com.lls.seckill.model.SuccessRecord">
+        <result column="sec_kill_id" property="secKillId"/>
+        <result column="phone" property="phone"/>
+        <result column="state" property="state"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <sql id="baseSqlColumn">
+        `sec_kill_id`, `phone`, `state`, `created_at`
+    </sql>
+
+
+    <select id="getItem" resultType="com.lls.seckill.model.SuccessRecord">
+   	SELECT
+          `success_record`.`sec_kill_id`,
+          `success_record`.`phone`,
+          `success_record`.`state`,
+          `success_record`.`created_at`,
+          `sec_kill`.`id` AS `secKill.id`,
+          `sec_kill`.`name` as "secKill.name",
+          `sec_kill`.`count` as "secKill.count",
+          `sec_kill`.`start_time` as "secKill.start_time",
+          `sec_kill`.`end_time` as "secKill.end_time",
+          `sec_kill`.`created_at` as "secKill.created_at"
+        FROM `success_record`
+        JOIN `sec_kill` ON `sec_kill`.`id` = `success_record`.`sec_kill_id`
+        WHERE `sec_kill`.`id` = #{secKillId} AND `sec_kill`.`phone` = #{phone}
+   </select>
+
+    <insert id="save">
+   	  INSERT IGNORE INTO `success_record`(`seckill_id`, `phone`, state) VALUES (#{seckillId}, #{phone}, 0)
+   </insert>
+</mapper>

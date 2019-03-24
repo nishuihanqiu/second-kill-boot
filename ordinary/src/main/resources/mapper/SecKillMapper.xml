@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lls.seckill.dao.mapper.SecKillMapper">
+
+    <resultMap id="baseMap" type="com.lls.seckill.model.SecKill">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="count" property="count"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <sql id="baseSqlColumn">
+        `id`, `name`, `count`, `start_time`, `end_time`, `created_at`, `updated_at`
+    </sql>
+
+    <select id="getAll" resultMap="baseMap">
+        SELECT
+        <include refid="baseSqlColumn"/>
+        FROM `sec_kill`
+        ORDER BY `created_at` DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="getItem" resultMap="baseMap">
+        SELECT
+        <include refid="baseSqlColumn"/>
+        FROM `sec_kill` WHERE `id` = #{id}
+    </select>
+
+    <update id="updateCount">
+        UPDATE `sec_kill`
+        SET  `count` = `count` - 1
+        WHERE `id` = #{id}
+        AND `start_time` <![CDATA[ <= ]]> #{executedTime}
+        AND `end_time` >= #{executedTime}
+        AND `count` > 0;
+    </update>
+
+    <select id="executeByProcedure" statementType="CALLABLE">
+        call execute_sec_kill(
+          #{id,jdbcType=BIGINT,mode=IN},
+          #{phone,jdbcType=VARCHAR,mode=IN},
+    	  #{executedTime,jdbcType=TIMESTAMP,mode=IN},
+    	  #{result,jdbcType=INTEGER,mode=OUT}
+    	)
+    </select>
+
+</mapper>
