@@ -28,10 +28,10 @@
           `sec_kill`.`created_at` as "secKill.created_at"
         FROM `success_record`
         JOIN `sec_kill` ON `sec_kill`.`id` = `success_record`.`sec_kill_id`
-        WHERE `sec_kill`.`id` = #{secKillId} AND `sec_kill`.`phone` = #{phone}
+        WHERE `sec_kill`.`id` = #{secKillId} AND `success_record`.`phone` = #{phone}
    </select>
 
     <insert id="save">
-   	  INSERT IGNORE INTO `success_record`(`seckill_id`, `phone`, state) VALUES (#{seckillId}, #{phone}, 0)
+   	  INSERT IGNORE INTO `success_record`(`sec_kill_id`, `phone`, state) VALUES (#{seckillId}, #{phone}, 0)
    </insert>
 </mapper>
